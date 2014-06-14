@@ -1,0 +1,76 @@
+######################### ElasticSearch Configuration  ########################
+
+# This file is managed by Chef, do not edit manually, your changes *will* be overwritten!
+#
+# Please see the source file for context and more information:
+#
+# https://github.com/elasticsearch/elasticsearch/blob/master/config/elasticsearch.yml
+#
+# To set configurations not exposed by this template, set the
+# `node.elasticsearch[:custom_config]` attribute in your node configuration,
+# `elasticsearch/settings` data bag, role/environment definition, etc:
+#
+#     // ...
+#     'threadpool.index.type' => 'fixed',
+#     'threadpool.index.size' => '2'
+#     // ...
+
+################################### Cluster ###################################
+
+cluster.name: elasticsearch
+
+#################################### Node #####################################
+
+node.name: node3
+node.max_local_storage_nodes: 1
+
+#################################### Index ####################################
+
+index.mapper.dynamic: true
+action.auto_create_index: true
+action.disable_delete_all_indices: true
+
+#################################### Paths ####################################
+
+path.conf: /usr/local/etc/elasticsearch
+path.data: /usr/local/var/data/elasticsearch
+path.logs: /usr/local/var/log/elasticsearch
+
+#################################### Plugin ###################################
+
+
+################################### Memory ####################################
+
+bootstrap.mlockall: true
+
+############################## Network And HTTP ###############################
+
+http.port: 9200
+network.publish_host: 192.168.33.40
+
+################################### Gateway ###################################
+
+gateway.expected_nodes: 1
+
+############################# Recovery Throttling #############################
+
+
+################################## Discovery ##################################
+
+discovery.zen.minimum_master_nodes: 1
+discovery.zen.ping.multicast.enabled: false
+discovery.zen.ping.unicast.hosts: ["192.168.33.20","192.168.33.30","192.168.33.40"]
+
+cloud.node.auto_attributes: true
+
+################################## Slow Log ###################################
+
+
+################################## GC Logging #################################
+
+
+################################## JMX ########################################
+
+
+################################## Custom #####################################
+

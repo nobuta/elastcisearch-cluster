@@ -1,0 +1,96 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "centos64"
+  config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box"
+  
+  config.berkshelf.enabled = true
+  
+  config.vm.define :node1 do |node1| 
+    node1.vm.hostname = "node1" 
+    node1.ssh.guest_port = 22
+    node1.vm.network :forwarded_port, guest: 22, host: 2022, id: "ssh"
+    node1.vm.network :forwarded_port, guest: 80, host: 2080, id: "http"
+    node1.vm.network :forwarded_port, guest: 9200, host: 11200, id: "elasticsearch"
+    node1.vm.network :forwarded_port, guest: 9300, host: 11300, id: "elasticsearch-transport"
+    node1.vm.network :private_network, ip: "192.168.33.20" 
+    node1.vm.provider "virtualbox" do |vb| 
+      vb.customize ["modifyvm", :id, "--memory", 1536]
+      vb.customize ["modifyvm", :id, "--vram", 16]
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+      vb.customize ["modifyvm", :id, "--ioapic", "on"]
+      vb.name = "node1" 
+    end
+    node1.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = ["../chef-repo/cookbooks", "../chef-repo/site-cookbooks"]
+      chef.data_bags_path = "../chef-repo/data_bags"
+      chef.roles_path =  "../chef-repo/roles"
+      chef.add_role("esearch-nodes")
+      chef.json = {
+        :elasticsearch => {
+          :network_publish_host => "192.168.33.20"
+        }
+      }
+    end
+  end
+  
+  config.vm.define :node2 do |node2| 
+    node2.vm.hostname = "node2" 
+    node2.ssh.guest_port = 22
+    node2.vm.network :forwarded_port, guest: 22, host: 3022, id: "ssh"
+    node2.vm.network :forwarded_port, guest: 80, host: 3080, id: "http"
+    node2.vm.network :forwarded_port, guest: 9200, host: 12200, id: "elasticsearch"
+    node2.vm.network :forwarded_port, guest: 9300, host: 12300, id: "elasticsearch-transport"
+    node2.vm.network :private_network, ip: "192.168.33.30" 
+    node2.vm.provider "virtualbox" do |vb| 
+      vb.customize ["modifyvm", :id, "--memory", 1536]
+      vb.customize ["modifyvm", :id, "--vram", 16]
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+      vb.customize ["modifyvm", :id, "--ioapic", "on"]
+      vb.name = "node2" 
+    end
+    node2.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = ["../chef-repo/cookbooks", "../chef-repo/site-cookbooks"]
+      chef.data_bags_path = "../chef-repo/data_bags"
+      chef.roles_path =  "../chef-repo/roles"
+      chef.add_role("esearch-nodes")
+      chef.json = {
+        :elasticsearch => {
+          :network_publish_host => "192.168.33.30"
+        }
+      }
+    end
+  end
+  
+  config.vm.define :node3 do |node3| 
+    node3.vm.hostname = "node3" 
+    node3.ssh.guest_port = 22
+    node3.vm.network :forwarded_port, guest: 22, host: 4022, id: "ssh"
+    node3.vm.network :forwarded_port, guest: 80, host: 4080, id: "http"
+    node3.vm.network :forwarded_port, guest: 9200, host: 13200, id: "elasticsearch"
+    node3.vm.network :forwarded_port, guest: 9300, host: 13300, id: "elasticsearch-transport"
+    node3.vm.network :private_network, ip: "192.168.33.40" 
+    node3.vm.provider "virtualbox" do |vb| 
+      vb.customize ["modifyvm", :id, "--memory", 1536]
+      vb.customize ["modifyvm", :id, "--vram", 16]
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+      vb.customize ["modifyvm", :id, "--ioapic", "on"]
+      vb.name = "node3" 
+    end
+    node3.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = ["../chef-repo/cookbooks", "../chef-repo/site-cookbooks"]
+      chef.data_bags_path = "../chef-repo/data_bags"
+      chef.roles_path =  "../chef-repo/roles"
+      chef.add_role("esearch-nodes")
+      chef.json = {
+        :elasticsearch => {
+          :network_publish_host => "192.168.33.40"
+        }
+      }
+    end
+  end
+  
+end

@@ -1,0 +1,5 @@
+site :opscode
+cookbook "dns", path: "../chef-repo/site-cookbooks/dns"
+cookbook "iptables", path: "../chef-repo/site-cookbooks/iptables"
+cookbook "java"
+cookbook "elasticsearch"
